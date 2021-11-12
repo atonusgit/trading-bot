@@ -1,0 +1,2 @@
+# Trading bot
+Use at your own risk! Author of this software is not responsible for any losses or issues you may have, when using this software. This is not a financial advice and I'm not a financial advisor.
