@@ -34,9 +34,9 @@ def check_if_filled(id):
     filled = False
     start = time.time()
 
-    while time.time() < start + 3:
+    while time.time() < start + 30:
         filled = ftx_session.is_filled(id)
-        time.sleep(1)
+        time.sleep(10)
 
     return filled
 
