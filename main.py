@@ -12,10 +12,16 @@ def get_market():
     return ftx_session.get_market(os.getenv('MARKET'))
 
 def set_size(market):
-    return (int(os.getenv('INVESTMENT')) - int(os.getenv('INVESTMENT')) * float(os.getenv('SLIP'))) / market['price']
+    if os.getenv('SLIP_FROM') == 'INVESTMENT':
+        return int(os.getenv('INVESTMENT')) / market['price']
+    elif os.getenv('SLIP_FROM') == 'PRICE':
+        return (int(os.getenv('INVESTMENT')) - int(os.getenv('INVESTMENT')) * float(os.getenv('SLIP'))) / market['price']
 
-def set_price(size):
-    return round(int(os.getenv('INVESTMENT')) / size, 2)
+def set_price(size, market):
+    if os.getenv('SLIP_FROM') == 'INVESTMENT':
+        return round(int(os.getenv('INVESTMENT')) * float(os.getenv('SLIP')) + market['price'], 2)
+    elif os.getenv('SLIP_FROM') == 'PRICE':
+        return round(int(os.getenv('INVESTMENT')) / size, 2)
 
 def place_order(price, size):
     return ftx_session.place_order(
@@ -57,7 +63,7 @@ def print_result(order_response, filled):
 def main():
     market = get_market()
     size = set_size(market)
-    price = set_price(size)
+    price = set_price(size, market)
     order_response = place_order(price, size)
     filled = check_if_filled(order_response['id'])
     send_mail(order_response, market, filled)
